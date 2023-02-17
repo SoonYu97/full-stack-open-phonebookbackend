@@ -1,7 +1,9 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
+app.use(morgan('tiny'));
 
 let persons = [
   {
@@ -62,7 +64,7 @@ app.post("/api/persons", (request, response) => {
     response.status(400).json(message);
   } else if (persons.find((p) => p.name === person.name)) {
     const message = { error: `name must be unique` };
-    response.status(400).json(message);
+    response.status(303).json(message);
   } else {
     const id = Math.floor(Math.random() * 1000);
     const package = { id, ...person };
@@ -73,9 +75,7 @@ app.post("/api/persons", (request, response) => {
 
 app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
-  console.log(id);
   persons = persons.filter((p) => p.id !== id);
-  console.log(persons);
   response.status(204).end();
 });
 
