@@ -1,4 +1,13 @@
-GET http://localhost:3001/api/persons
+GET http://localhost:3001/api/persons HTTP/1.1
 
 ###
-DELETE http://localhost:3001/api/persons/5
+DELETE http://localhost:3001/api/persons/5 HTTP/1.1
+
+###
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Mary3 Poppendieck",
+    "number": "49-23-6423122"
+}
