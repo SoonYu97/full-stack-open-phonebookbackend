@@ -57,10 +57,18 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.post("/api/persons", (request, response) => {
   const person = request.body;
-  const id = Math.floor(Math.random() * 1000);
-  const package = { id, ...person };
-  persons = persons.concat(package);
-  response.status(201).json(package);
+  if (!person.hasOwnProperty("name") || !person.hasOwnProperty("number")) {
+    const message = { error: `must include name and number` };
+    response.status(400).json(message);
+  } else if (persons.find((p) => p.name === person.name)) {
+    const message = { error: `name must be unique` };
+    response.status(400).json(message);
+  } else {
+    const id = Math.floor(Math.random() * 1000);
+    const package = { id, ...person };
+    persons = persons.concat(package);
+    response.status(201).json(package);
+  }
 });
 
 app.delete("/api/persons/:id", (request, response) => {
