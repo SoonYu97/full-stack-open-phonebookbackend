@@ -15,7 +15,7 @@ app.use(
   )
 );
 app.use(cors());
-app.use(express.static('build'))
+app.use(express.static("build"));
 
 let persons = [
   {
@@ -36,11 +36,6 @@ let persons = [
   {
     id: 4,
     name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-  {
-    id: 5,
-    name: "Mary2 Poppendieck",
     number: "39-23-6423122",
   },
 ];
@@ -91,7 +86,7 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+  console.log(`Server running on port ${PORT}`);
+});
