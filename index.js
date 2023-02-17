@@ -24,8 +24,13 @@ let persons = [
   },
 ];
 
-app.get("/", (request, response) => {
-  response.send("<h1>Hello World!</h1>");
+app.get("/info", (request, response) => {
+  const unix_timestamp = Date.now();
+  var date = new Date(unix_timestamp);
+  output = `<p>Phonebook has info for ${
+    persons.length
+  } people</p><p>${date.toString()}</p>`;
+  response.send(output);
 });
 
 app.get("/api/persons", (request, response) => {
