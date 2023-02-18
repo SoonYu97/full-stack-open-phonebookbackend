@@ -12,4 +12,4 @@ const errorHandler = (error, req, res, next) => {
   next(error);
 };
 
-module.exports = {unknownEndpoint, errorHandler}
+module.exports = { unknownEndpoint, errorHandler };

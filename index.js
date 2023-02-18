@@ -56,17 +56,36 @@ app.get("/api/persons/:id", (req, res, next) => {
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-  if (body.name === undefined || body.number === undefined) {
+  if (
+    body.name === undefined ||
+    body.number === undefined ||
+    body.name === "" ||
+    body.number === ""
+  ) {
     const message = { error: `must include name and number` };
     return res.status(400).json(message);
   }
-  // } else if (Person.find({name: person.name})) {
-  //   const message = { error: `name must be unique` };
-  //   res.status(303).json(message);
   const person = new Person(body);
   person.save().then((savedperson) => {
     res.json(savedperson);
   });
+});
+
+app.put("/api/persons/:id", (req, res) => {
+  const body = req.body;
+  Person.countDocuments({ name: body.name }, { limit: 1 }).then((count) => {
+    if (count !== 1) {
+      const message = { error: `id not found to be updated` };
+      return res.status(404).json(message);
+    }
+  });
+
+  Person.findByIdAndUpdate(req.params.id, body, { new: true })
+    .then((updatedPerson) => {
+      console.log(updatedPerson);
+      res.json(updatedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (req, res, next) => {
