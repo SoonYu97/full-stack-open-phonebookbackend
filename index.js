@@ -54,7 +54,7 @@ app.get("/api/persons/:id", (req, res, next) => {
     });
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
   if (
     body.name === undefined ||
@@ -66,23 +66,35 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).json(message);
   }
   const person = new Person(body);
-  person.save().then((savedperson) => {
-    res.json(savedperson);
-  });
+  person
+    .save()
+    .then((savedperson) => {
+      res.json(savedperson);
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
-app.put("/api/persons/:id", (req, res) => {
-  const body = req.body;
-  Person.countDocuments({ name: body.name }, { limit: 1 }).then((count) => {
+app.put("/api/persons/:id", (req, res, next) => {
+  const { name, number } = req.body;
+  Person.countDocuments({ name: name }, { limit: 1 }).then((count) => {
     if (count !== 1) {
       const message = { error: `id not found to be updated` };
       return res.status(404).json(message);
     }
   });
 
-  Person.findByIdAndUpdate(req.params.id, body, { new: true })
+  Person.findByIdAndUpdate(
+    req.params.id,
+    { name, number },
+    {
+      new: true,
+      runValidators: true,
+      context: "query",
+    }
+  )
     .then((updatedPerson) => {
-      console.log(updatedPerson);
       res.json(updatedPerson);
     })
     .catch((error) => next(error));
